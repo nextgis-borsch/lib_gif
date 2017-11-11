@@ -1,0 +1,8 @@
+.,.,,"README,ChangeLog,TODO,NEWS,INSTALL,COPYING,BUGS,AUTHORS"
+doc,doc,,"gif,txt,1,00README"
+doc/whatsinagif,doc/whatsinagif,,"html,gif"
+lib,lib,,"c,h"
+m4,m4,skip,
+pic,pic,,"gif,NOTES,ico"
+tests,tests,,"dmp,FOO,map,rgb,ico,gif,"
+util,util,,"c,h"
