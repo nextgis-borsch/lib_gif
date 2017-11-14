@@ -37,17 +37,17 @@ function(check_version major minor rev)
     string (REGEX MATCH "([0-9]+)"
       _MINOR_VERSION ${_MINOR_VERSION})
     string(REGEX MATCH "GIFLIB_RELEASE[ \t]+([0-9]+)"
-      _MICRO_VERSION ${_VERSION_H_CONTENTS})
+      _PATCH_VERSION ${_VERSION_H_CONTENTS})
     string (REGEX MATCH "([0-9]+)"
-      _MICRO_VERSION ${_MICRO_VERSION})
+      _PATCH_VERSION ${_PATCH_VERSION})
 
     set(${major} ${_MAJOR_VERSION} PARENT_SCOPE)
     set(${minor} ${_MINOR_VERSION} PARENT_SCOPE)
-    set(${rev} ${_MICRO_VERSION} PARENT_SCOPE)
+    set(${rev} ${_PATCH_VERSION} PARENT_SCOPE)
 
     # Store version string in file for installer needs
     file(TIMESTAMP ${VERSION_FILE} VERSION_DATETIME "%Y-%m-%d %H:%M:%S" UTC)
-    file(WRITE ${CMAKE_BINARY_DIR}/version.str "${GIF_MAJOR_VERSION}.${GIF_MINOR_VERSION}.${GIF_PATCH_VERSION}\n${VERSION_DATETIME}")
+    file(WRITE ${CMAKE_BINARY_DIR}/version.str "${_MAJOR_VERSION}.${_MINOR_VERSION}.${_PATCH_VERSION}\n${VERSION_DATETIME}")
 endfunction(check_version)
 
 function(report_version name ver)
