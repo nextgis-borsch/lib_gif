@@ -102,6 +102,10 @@ if(NOT HAVE_STDARG_H)
     message(FATAL_ERROR "giflib needs stdarg.h to compile")
 endif()
 
+if(WIN32)
+    add_definitions( -D_USRDLL -D_WINDOWS )
+endif()
+
 set(PACKAGE_NAME ${PROJECT_NAME})
 string(TOUPPER ${PACKAGE_NAME} PACKAGE_UPPER_NAME)
 

@@ -1,0 +1,17 @@
+LIBRARY   gif
+EXPORTS
+   GifErrorString
+   GifMakeMapObject
+   GifFreeMapObject
+   GifUnionColorMap
+   GifBitSize
+   reallocarray
+   GifApplyTranslation
+   GifAddExtensionBlock
+   GifFreeExtensions
+   GifMakeSavedImage
+   GifFreeSavedImages
+   GifDrawText8x8
+   GifDrawBox
+   GifDrawRectangle
+   GifDrawBoxedText8x8

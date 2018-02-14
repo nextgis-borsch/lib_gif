@@ -46,6 +46,10 @@ set (HEADERS
     gif_lib_private.h
 )
 
+if(WIN32)
+    set(SRCS ${SRCS} lib.def)
+endif()
+
 set(LIB_NAME ${PROJECT_NAME})
 if(BUILD_SHARED_LIBS)
     add_library(${LIB_NAME} SHARED ${SRCS} ${PUBLIC_HEADERS} ${HEADERS})
