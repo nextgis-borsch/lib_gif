@@ -26,7 +26,9 @@
 
 include_directories (${PROJECT_SOURCE_DIR}/lib)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -fno-builtin -g -W -Wreturn-type -Wcomment")
+if(UNIX)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -fno-builtin -g -W -Wreturn-type -Wcomment")
+endif()
 
 set(noinst_PROGRAMS gifbg gifcolor giffilter gifhisto gifsponge gifwedge)
 set(bin_PROGRAMS
