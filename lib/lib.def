@@ -35,3 +35,11 @@ EXPORTS
    EGifGCBToExtension
    DGifSavedExtensionToGCB
    EGifGCBToSavedExtension
+   _EGifPutScreenDesc
+   _EGifPutImageDesc
+   _DGifGetRecordType
+   _DGifGetImageDesc
+   _DGifGetLine
+   _DGifGetExtension
+   _DGifGetExtensionNext
+   _GifAsciiTable8x8
