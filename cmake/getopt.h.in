@@ -1,6 +1,4 @@
 #ifndef __GETOPT_H__
-
-#ifdef _WINDOWS
 /**
  * DISCLAIMER
  * This file is part of the mingw-w64 runtime package.
@@ -651,7 +649,5 @@ getopt_long_only(int nargc, char * const *nargv, const char *options,
 #ifdef __cplusplus
 }
 #endif
-
-#endif // _WINDOWS
 
 #endif /* !defined(__UNISTD_H_SOURCED__) && !defined(__GETOPT_LONG_H__) */

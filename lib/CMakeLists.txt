@@ -25,6 +25,7 @@
 ################################################################################
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
+include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
 set (SRCS
     dgif_lib.c
@@ -48,6 +49,8 @@ set (HEADERS
 
 if(WIN32)
     set(SRCS ${SRCS} lib.def)
+    configure_file(${PROJECT_SOURCE_DIR}/cmake/unistd.h.in ${CMAKE_CURRENT_BINARY_DIR}/unistd.h COPYONLY)
+    configure_file(${PROJECT_SOURCE_DIR}/cmake/getopt.h.in ${CMAKE_CURRENT_BINARY_DIR}/getopt.h COPYONLY)
 endif()
 
 set(LIB_NAME ${PROJECT_NAME})

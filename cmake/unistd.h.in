@@ -11,6 +11,8 @@
 #define srandom srand
 #define random rand
 
+#else
+#include <unistd.h>
 #endif // _WINDOWS
 
 #endif /* unistd.h  */
