@@ -43,3 +43,12 @@ EXPORTS
    DGifGetExtension
    DGifGetExtensionNext
    GifAsciiTable8x8
+   DGifGetCode
+   DGifGetCodeNext
+   DGifGetLZCodes
+   EGifPutLine
+   EGifPutExtensionLeader
+   EGifPutExtensionBlock
+   EGifPutExtensionTrailer
+   EGifPutCode
+   EGifPutCodeNext
