@@ -15,3 +15,23 @@ EXPORTS
    GifDrawBox
    GifDrawRectangle
    GifDrawBoxedText8x8
+   _InitHashTable
+   _ClearHashTable
+   _InsertHashTable
+   _ExistsHashTable
+   EGifOpenFileName
+   EGifOpenFileHandle
+   EGifOpen
+   EGifSpew
+   EGifGetGifVersion
+   EGifCloseFile
+   DGifOpenFileName
+   DGifOpenFileHandle
+   DGifSlurp
+   DGifOpen
+   DGifCloseFile
+   GifQuantizeBuffer
+   DGifExtensionToGCB
+   EGifGCBToExtension
+   DGifSavedExtensionToGCB
+   EGifGCBToSavedExtension
