@@ -47,6 +47,7 @@ EXPORTS
    DGifGetCodeNext
    DGifGetLZCodes
    EGifPutLine
+   EGifPutExtension
    EGifPutExtensionLeader
    EGifPutExtensionBlock
    EGifPutExtensionTrailer
