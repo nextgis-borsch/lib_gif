@@ -87,6 +87,10 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
     )
 endif()
 
+if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
+    install(FILES ${PUBLIC_HEADERS} DESTINATION "${INSTALL_INC_DIR}")
+endif()
+
 # Add path to includes to build-tree export
 target_include_directories(${LIB_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
