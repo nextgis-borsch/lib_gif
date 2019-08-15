@@ -22,11 +22,11 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 /* We are on Windows */
 # define strtok_r strtok_s
-#include <stdio.h>
 #endif
 
 #define GIF_STAMP "GIFVER"          /* First chars in file - GIF stamp.  */
