@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "gif_lib_private.h"
+
 #ifndef SIZE_MAX
     #define SIZE_MAX     UINTPTR_MAX
 #endif
@@ -17,6 +19,11 @@
  * if both s1 < MUL_NO_OVERFLOW and s2 < MUL_NO_OVERFLOW
  */
 #define MUL_NO_OVERFLOW	((size_t)1 << (sizeof(size_t) * 4))
+
+void *reallocarray(void *optr, size_t nmemb, size_t size) 
+{
+	return openbsd_reallocarray(optr, nmemb, size);
+}
 
 void *
 openbsd_reallocarray(void *optr, size_t nmemb, size_t size)

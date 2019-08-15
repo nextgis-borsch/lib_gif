@@ -41,7 +41,7 @@ set (SRCS
 )
 
 if(NOT HAVE_REALLOCARRAY)
-    set (SRCS ${SRC} openbsd-reallocarray.c)
+    set (SRCS ${SRCS} openbsd-reallocarray.c)
     set (RA_FUN_NAME reallocarray)
 endif()
 
