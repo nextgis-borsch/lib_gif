@@ -27,6 +27,9 @@
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
+include(CheckFunctionExists)
+check_function_exists(reallocarray HAVE_REALLOCARRAY)
+
 set (SRCS
     dgif_lib.c
     egif_lib.c
@@ -34,9 +37,13 @@ set (SRCS
     gif_font.c
     gif_hash.c
     gifalloc.c
-    openbsd-reallocarray.c
     quantize.c
 )
+
+if(NOT HAVE_REALLOCARRAY)
+    set (SRCS ${SRC} openbsd-reallocarray.c)
+    set (RA_FUN_NAME reallocarray)
+endif()
 
 set (PUBLIC_HEADERS
     gif_hash.h
@@ -48,7 +55,8 @@ set (HEADERS
 )
 
 if(WIN32)
-    set(SRCS ${SRCS} lib.def)
+    configure_file(lib.def.in ${PROJECT_BINARY_DIR}/lib.def @ONLY)
+    set(SRCS ${SRCS} ${PROJECT_BINARY_DIR}/lib.def)
     configure_file(${PROJECT_SOURCE_DIR}/cmake/unistd.h.in ${CMAKE_CURRENT_BINARY_DIR}/unistd.h COPYONLY)
     configure_file(${PROJECT_SOURCE_DIR}/cmake/getopt.h.in ${CMAKE_CURRENT_BINARY_DIR}/getopt.h COPYONLY)
 endif()
