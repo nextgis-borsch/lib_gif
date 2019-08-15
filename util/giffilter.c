@@ -16,6 +16,8 @@ copy an image from a much more (or much *less*) memory-limited system; your
 compression may use more (or fewer) bits.  The uncompressed rasters should,
 however, be identical (you can check this with gifbuild -d).
 
+SPDX-License-Identifier: MIT
+
 ******************************************************************************/
 
 #include <stdio.h>
@@ -23,8 +25,8 @@ however, be identical (you can check this with gifbuild -d).
 #include <string.h>
 #include <fcntl.h>
 
-#include "getarg.h"
 #include "gif_lib.h"
+#include "getarg.h"
 
 #define PROGRAM_NAME	"giffilter"
 

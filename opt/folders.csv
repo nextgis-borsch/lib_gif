@@ -1,8 +1,8 @@
 .,.,,"README,ChangeLog,TODO,NEWS,INSTALL,COPYING,BUGS,AUTHORS"
 doc,doc,,"gif,txt,1,00README"
 doc/whatsinagif,doc/whatsinagif,,"html,gif"
-lib,lib,,"c,h"
+.,lib,,"dgif_lib.c,egif_lib.c,gif_err.c,gif_font.c,gif_hash.c,gif_hash.h,gif_lib.h,gif_lib_private.h,gifalloc.c,openbsd-reallocarray.c,quantize.c"
 m4,m4,skip,
 pic,pic,,"gif,NOTES,ico"
-tests,tests,,"dmp,FOO,map,rgb,ico,gif,"
-util,util,,"c,h"
+tests,tests,,"dmp,FOO,map,rgb,ico,gif"
+.,util,,"getarg.c,getarg.h,gif2rgb.c,gifbg.c,gifbuild.c,gifclrmp.c,gifcolor.c,gifecho.c,giffilter.c,giffix.c,gifhisto.c,gifinto.c,gifsponge.c,giftext.c,giftool.c,gifwedge.c,qprintf.c"

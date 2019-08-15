@@ -2,6 +2,8 @@
 
 gif2rgb - convert GIF to 24-bit RGB pixel triples or vice-versa
 
+SPDX-License-Identifier: MIT
+
 *****************************************************************************/
 
 /***************************************************************************
@@ -15,7 +17,7 @@ Toshio Kuratomi had written this in a comment about the rgb2gif code:
 
 I (ESR) took this off the main to-do list in 2012 because I don't think
 the GIFLIB project actually needs to be in the converters-and-tools business.
-Plenty of hackers do that; our jub is to supply stable library capability
+Plenty of hackers do that; our job is to supply stable library capability
 with our utilities mainly interesting as test tools.
 
 ***************************************************************************/
@@ -95,7 +97,6 @@ static void LoadRGB(char *FileName,
 
 	    for (i = 0; i < 3; i++) {
 		strncpy(OneFileName, FileName, sizeof(OneFileName)-1);
-		/* cppcheck-suppress uninitstring */
 		strncat(OneFileName, Postfixes[i], 
 			sizeof(OneFileName) - 1 - strlen(OneFileName));
 
@@ -150,9 +151,7 @@ static void LoadRGB(char *FileName,
 	}
 
 	fclose(rgbfp[0]);
-	// cppcheck-suppress useClosedFile
 	fclose(rgbfp[1]);
-	// cppcheck-suppress useClosedFile
 	fclose(rgbfp[2]);
     }
 }
@@ -178,10 +177,10 @@ static void SaveGif(GifByteType *OutputBuffer,
 			  Width, Height, ExpColorMapSize, 0,
 			  OutputColorMap) == GIF_ERROR ||
 	EGifPutImageDesc(GifFile,
-			 0, 0, Width, Height, false, NULL) ==
-	                                                             GIF_ERROR)
+			 0, 0, Width, Height, false, NULL) == GIF_ERROR) {
 	PrintGifError(Error);
 	exit(EXIT_FAILURE);
+    }
 
     GifQprintf("\n%s: Image 1 at (%d, %d) [%dx%d]:     ",
 	       PROGRAM_NAME, GifFile->Image.Left, GifFile->Image.Top,
@@ -195,9 +194,10 @@ static void SaveGif(GifByteType *OutputBuffer,
 	Ptr += Width;
     }
 
-    if (EGifCloseFile(GifFile, &Error) == GIF_ERROR)
+    if (EGifCloseFile(GifFile, &Error) == GIF_ERROR) {
 	PrintGifError(Error);
 	exit(EXIT_FAILURE);
+    }
 }
 
 /******************************************************************************
@@ -262,7 +262,6 @@ static void DumpScreen2RGB(char *FileName, int OneFileFlag,
 
             for (i = 0; i < 3; i++) {
                 strncpy(OneFileName, FileName, sizeof(OneFileName)-1);
-		/* cppcheck-suppress uninitstring */
                 strncat(OneFileName, Postfixes[i], 
 			sizeof(OneFileName) - 1 - strlen(OneFileName));
     
@@ -279,6 +278,11 @@ static void DumpScreen2RGB(char *FileName, int OneFileFlag,
 #endif /* _WIN32 */
         
         rgbfp[0] = stdout;
+    }
+
+    if (ColorMap == NULL) {
+	fprintf(stderr, "Color map pointer is NULL.\n");
+	exit(EXIT_FAILURE);
     }
 
     if (OneFileFlag) {
@@ -328,9 +332,7 @@ static void DumpScreen2RGB(char *FileName, int OneFileFlag,
         free((char *) Buffers[1]);
         free((char *) Buffers[2]);
         fclose(rgbfp[0]);
-	// cppcheck-suppress useClosedFile
         fclose(rgbfp[1]);
-	// cppcheck-suppress useClosedFile
         fclose(rgbfp[2]);
     }
 }
@@ -461,13 +463,19 @@ static void GIF2RGB(int NumFiles, char *FileName,
 		break;
 	}
     } while (RecordType != TERMINATE_RECORD_TYPE);
-
+    
     /* Lets dump it - set the global variables required and do it: */
     ColorMap = (GifFile->Image.ColorMap
 		? GifFile->Image.ColorMap
 		: GifFile->SColorMap);
     if (ColorMap == NULL) {
         fprintf(stderr, "Gif Image does not have a colormap\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* check that the background color isn't garbage (SF bug #87) */
+    if (GifFile->SBackGroundColor < 0 || GifFile->SBackGroundColor >= ColorMap->ColorCount) {
+        fprintf(stderr, "Background color out of range for colormap\n");
         exit(EXIT_FAILURE);
     }
 

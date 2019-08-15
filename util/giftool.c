@@ -2,6 +2,8 @@
 
 giftool.c - GIF transformation tool.
 
+SPDX-License-Identifier: MIT
+
 ****************************************************************************/
 
 #include <stdio.h>
@@ -11,8 +13,8 @@ giftool.c - GIF transformation tool.
 #include <stdbool.h>
 
 #include "getopt.h"
-#include "getarg.h"
 #include "gif_lib.h"
+#include "getarg.h"
 
 #define PROGRAM_NAME	"giftool"
 
@@ -558,9 +560,10 @@ int main(int argc, char **argv)
     GifFileOut->SHeight = GifFileIn->SHeight;
     GifFileOut->SColorResolution = GifFileIn->SColorResolution;
     GifFileOut->SBackGroundColor = GifFileIn->SBackGroundColor;
-    GifFileOut->SColorMap = GifMakeMapObject(
-				 GifFileIn->SColorMap->ColorCount,
-				 GifFileIn->SColorMap->Colors);
+    if (GifFileIn->SColorMap != NULL)
+	GifFileOut->SColorMap = GifMakeMapObject(
+	    GifFileIn->SColorMap->ColorCount,
+	    GifFileIn->SColorMap->Colors);
 
     for (i = 0; i < GifFileIn->ImageCount; i++)
 	(void) GifMakeSavedImage(GifFileOut, &GifFileIn->SavedImages[i]);

@@ -2,6 +2,8 @@
 
 gifbg - generate a test-pattern GIF
 
+SPDX-License-Identifier: MIT
+
 *****************************************************************************/
 
 #include <stdio.h>
@@ -70,7 +72,6 @@ static void QuitGifError(GifFileType *GifFile);
 ******************************************************************************/
 int main(int argc, char **argv)
 {
-    unsigned int Ratio;
     int	i, l, LevelWidth, LogNumLevels, ErrorCode, Count = 0;
     bool Error, FlipDir, DoAllMaximum = false,
 	DirectionFlag = false, LevelsFlag = false, ColorFlag = false,
@@ -159,7 +160,7 @@ int main(int argc, char **argv)
 	    break;
     }
     if (Direction == DIR_NONE)
-	GIF_EXIT("Direction requested (-d option) is wierd!");
+	GIF_EXIT("Direction requested (-d option) is weird!");
 
     /* We are going to handle only TOP, TOP_RIGHT, RIGHT, BOT_RIGHT  so flip */
     /* the complement cases (TOP <-> BOT for example) by flipping the	     */
@@ -209,9 +210,9 @@ int main(int argc, char **argv)
 
     for (i = 1; i <= NumLevels; i++) {
 	/* Ratio will be in the range of 0..100 for required intensity: */
-	Ratio = (MaximumIntensity * (i * (256 / NumLevels)) +
-		 MinimumIntensity * ((NumLevels - i) * (256 / NumLevels))) /
-		 256;
+	unsigned int Ratio = (MaximumIntensity * (i * (256 / NumLevels)) +
+			      MinimumIntensity * ((NumLevels - i) * (256 / NumLevels))) /
+	    256;
 	ColorMap->Colors[i-1].Red   = (RedColor * Ratio) / 100;
 	ColorMap->Colors[i-1].Green = (GreenColor * Ratio) / 100;
 	ColorMap->Colors[i-1].Blue  = (BlueColor * Ratio) / 100;
