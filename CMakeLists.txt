@@ -193,7 +193,7 @@ export(TARGETS ${LIB_NAME}
     FILE ${PROJECT_BINARY_DIR}/${PACKAGE_UPPER_NAME}Targets.cmake)
 
 # Create the <Package>Config.cmake file
-configure_file(${PROJECT_SOURCE_DIR}/cmake/PackageConfig.cmake.in
+configure_file(${PROJECT_SOURCE_DIR}/cmake/borsch/cmake/PackageConfig.cmake.in
     ${PROJECT_BINARY_DIR}/${PACKAGE_UPPER_NAME}Config.cmake @ONLY)
 
 if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
