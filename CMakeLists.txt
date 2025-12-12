@@ -46,34 +46,11 @@ if(OSX_FRAMEWORK AND (BUILD_SHARED_LIBS OR BUILD_STATIC_LIBS))
                        and BUILD_STATIC_LIBS keys are permitted")
 endif()
 
-if(OSX_FRAMEWORK)
-    set(INSTALL_BIN_DIR "bin" CACHE INTERNAL "Installation directory for executables" FORCE)
-    set(INSTALL_LIB_DIR "Library/Frameworks" CACHE INTERNAL "Installation directory for libraries" FORCE)
-    set(INSTALL_INC_DIR "${INSTALL_LIB_DIR}/${PROJECT_NAME}.framework/Headers" CACHE INTERNAL "Installation directory for headers" FORCE)
-    set(INSTALL_CMAKECONF_DIR ${INSTALL_LIB_DIR}/${PROJECT_NAME}.framework/Resources/CMake CACHE INTERNAL "Installation directory for cmake config files" FORCE)
-    set(SKIP_INSTALL_HEADERS ON)
-    set(SKIP_INSTALL_FILES ON)
-    set(SKIP_INSTALL_EXPORT ON)
-    set(CMAKE_MACOSX_RPATH ON)
-    set(SKIP_INSTALL_DOCS ON)
-else()
-    include(GNUInstallDirs)
-
-    set(INSTALL_BIN_DIR ${CMAKE_INSTALL_BINDIR} CACHE INTERNAL "Installation directory for executables" FORCE)
-    set(INSTALL_LIB_DIR ${CMAKE_INSTALL_LIBDIR} CACHE INTERNAL "Installation directory for libraries" FORCE)
-    set(INSTALL_INC_DIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE INTERNAL "Installation directory for headers" FORCE)
-    set(INSTALL_DOC_DIR ${CMAKE_INSTALL_DOCDIR} CACHE INTERNAL "Share directory for documents" FORCE)
-    set(INSTALL_MAN_DIR ${CMAKE_INSTALL_MANDIR} CACHE INTERNAL "Share directory for manuals" FORCE)
-    set(INSTALL_PKGCONFIG_DIR "${INSTALL_LIB_DIR}/pkgconfig" CACHE INTERNAL "Installation directory for pkgconfig (.pc) files" FORCE)
-    set(INSTALL_CMAKECONF_DIR ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/CMake CACHE INTERNAL "Installation directory for cmake config files" FORCE)
-    set(INSTALL_SHARE_DIR ${CMAKE_INSTALL_DATADIR} CACHE INTERNAL "Installation directory for share data" FORCE)
-endif()
-
 if(CMAKE_GENERATOR_TOOLSET MATCHES "v([0-9]+)_xp")
     add_definitions(-D_WIN32_WINNT=0x0501)
 endif()
 
-include(util)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/util.cmake)
 check_version(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
@@ -82,6 +59,8 @@ set(SO_VERSION "3.0")
 if(OSX_FRAMEWORK)
     set(FRAMEWORK_VERSION "${VERSION_MAJOR}")
 endif()
+
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/borsch/cmake/version.cmake)
 report_version(${PROJECT_NAME} ${VERSION})
 
 include (CheckIncludeFile)
@@ -107,8 +86,6 @@ if(WIN32)
 endif()
 
 set(PACKAGE_NAME ${PROJECT_NAME})
-string(TOUPPER ${PACKAGE_NAME} PACKAGE_UPPER_NAME)
-
 
 include(CheckFunctionExists)
 check_function_exists(reallocarray HAVE_REALLOCARRAY)
@@ -167,46 +144,13 @@ else()
     add_library(${LIB_NAME} STATIC ${SRCS} ${PUBLIC_HEADERS} ${HEADERS})
 endif()
 
-if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
-    install(TARGETS ${LIB_NAME}
-        EXPORT ${PACKAGE_UPPER_NAME}Targets
-        RUNTIME DESTINATION ${INSTALL_BIN_DIR} COMPONENT applications
-        ARCHIVE DESTINATION ${INSTALL_LIB_DIR} COMPONENT libraries
-        LIBRARY DESTINATION ${INSTALL_LIB_DIR} COMPONENT libraries
-        INCLUDES DESTINATION ${INSTALL_INC_DIR}
-        FRAMEWORK DESTINATION ${INSTALL_LIB_DIR}
-    )
-endif()
-
-if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
-    install(FILES ${PUBLIC_HEADERS} DESTINATION "${INSTALL_INC_DIR}")
-endif()
-
 # Add path to includes to build-tree export
 target_include_directories(${LIB_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 
-# Add all targets to the build-tree export set
-export(TARGETS ${LIB_NAME}
-    FILE ${PROJECT_BINARY_DIR}/${PACKAGE_UPPER_NAME}Targets.cmake)
-
-# Create the <Package>Config.cmake file
-configure_file(${PROJECT_SOURCE_DIR}/cmake/borsch/cmake/PackageConfig.cmake.in
-    ${PROJECT_BINARY_DIR}/${PACKAGE_UPPER_NAME}Config.cmake @ONLY)
-
-if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
-    # Install the <Package>Config.cmake
-    install(FILES
-      ${PROJECT_BINARY_DIR}/${PACKAGE_UPPER_NAME}Config.cmake
-      DESTINATION ${INSTALL_CMAKECONF_DIR} COMPONENT dev)
-
-    # Install the export set for use with the install-tree
-    install(EXPORT ${PACKAGE_UPPER_NAME}Targets DESTINATION ${INSTALL_CMAKECONF_DIR} COMPONENT dev)
-endif()
-
-
+# Applications installation ====================================================
 set(noinst_PROGRAMS gifbg gifcolor giffilter gifhisto gifsponge gifwedge)
 set(bin_PROGRAMS
 	gif2rgb
@@ -245,43 +189,18 @@ if(GIF_BUILD_APPS)
 endif()
 
 
-enable_testing()
-add_subdirectory(tests)
+# Testing ======================================================================
+option(BUILD_TESTING "Build the testing tree." ON)  # TODO: Switch to OFF by default
+if(BUILD_TESTING)
+    include(CTest)
+    add_subdirectory(tests)
+endif()
 
-set(SHARE_FILES
-    COPYING
-    NEWS
+# Installing and packaging =====================================================
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/borsch/cmake/packaging.cmake)
+create_borsch_package(${PACKAGE_NAME} 
+    VENDOR ${PACKAGE_VENDOR}
+    VERSION ${VERSION}
+    TARGETS ${LIB_NAME}
+    HEADERS ${PUBLIC_HEADERS}
 )
-
-if (NOT SKIP_INSTALL_DOCS AND NOT SKIP_INSTALL_ALL)
-    install(FILES ${SHARE_FILES}
-            DESTINATION ${INSTALL_SHARE_DIR}
-            COMPONENT documents
-        )
-endif()
-
-# Export package ===============================================================
-
-if(REGISTER_PACKAGE)
-    # Export the package for use from the build-tree
-    # (this registers the build-tree with a global CMake-registry)
-    export(PACKAGE ${PACKAGE_UPPER_NAME})
-endif()
-
-# Archiving ====================================================================
-
-set(CPACK_PACKAGE_NAME "${PACKAGE_NAME}")
-set(CPACK_PACKAGE_VENDOR "${PACKAGE_VENDOR}")
-set(CPACK_PACKAGE_VERSION "${VERSION}")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PACKAGE_NAME} Installation")
-set(CPACK_PACKAGE_RELOCATABLE TRUE)
-set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
-set(CPACK_GENERATOR "ZIP")
-set(CPACK_MONOLITHIC_INSTALL ON)
-set(CPACK_STRIP_FILES TRUE)
-
-# Get cpack zip archive name
-get_cpack_filename(${VERSION} PROJECT_CPACK_FILENAME)
-set(CPACK_PACKAGE_FILE_NAME ${PROJECT_CPACK_FILENAME})
-
-include(CPack)
