@@ -190,11 +190,7 @@ endif()
 
 
 # Testing ======================================================================
-option(BUILD_TESTING "Build the testing tree." ON)  # TODO: Switch to OFF by default
-if(BUILD_TESTING)
-    include(CTest)
-    add_subdirectory(tests)
-endif()
+add_subdirectory(tests)
 
 # Installing and packaging =====================================================
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/borsch/cmake/packaging.cmake)
